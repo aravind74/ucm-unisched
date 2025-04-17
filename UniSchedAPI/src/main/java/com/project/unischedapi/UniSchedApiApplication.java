@@ -8,6 +8,7 @@ public class UniSchedApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(UniSchedApiApplication.class, args);
+		//Nehal
 	}
 
 }
