@@ -1,4 +1,4 @@
-package com.project.unischedapi.model;
+package com.project.unischedapi.appointment.model;
 
 import lombok.Data;
 
