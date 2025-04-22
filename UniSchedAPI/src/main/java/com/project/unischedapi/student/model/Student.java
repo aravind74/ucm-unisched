@@ -1,5 +1,6 @@
-package com.project.unischedapi.model;
+package com.project.unischedapi.student.model;
 
+import com.project.unischedapi.user.model.User;
 import lombok.Data;
 
 @Data
