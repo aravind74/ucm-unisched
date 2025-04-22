@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import Login from './pages/Login';
+import StudentRegister from './pages/StudentRegister';
+import DepartmentRegister from './pages/DepartmentRegister';
+
+import DashboardLayout from './components/DashboardLayout';
+import StudentDashboard from './pages/student/StudentDashboard';
+import BookAppointment from './pages/student/BookAppointment';
+import DepartmentDashboard from './pages/department/DepartmentDashboard';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Login />} />
+        <Route path="/student/register" element={<StudentRegister />} />
+        <Route path="/department/register" element={<DepartmentRegister />} />
+
+        {/* Student routes with layout */}
+        <Route
+          path="/student/dashboard"
+          element={
+            <DashboardLayout>
+              <StudentDashboard />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/student/book"
+          element={
+            <DashboardLayout>
+              <BookAppointment />
+            </DashboardLayout>
+          }
+        />
+
+        {/* Department dashboard */}
+        <Route
+          path="/department/dashboard"
+          element={
+            <DashboardLayout>
+              <DepartmentDashboard />
+            </DashboardLayout>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
