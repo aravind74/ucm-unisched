@@ -47,7 +47,7 @@ public class AppointmentRepository {
                 "JOIN Department d ON a.DepartmentID = d.DepartmentID " +
                 "JOIN Student s ON a.StudentID = s.StudentID " +
                 "JOIN TimeSlot t ON a.TimeSlotID = t.TimeSlotID " +
-                "WHERE a.StudentID = ?";
+                "WHERE a.DepartmentID = ?";
 
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Appointment.class), departmentId);
     }

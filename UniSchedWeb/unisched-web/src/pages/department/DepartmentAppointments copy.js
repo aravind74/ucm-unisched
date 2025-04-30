@@ -6,7 +6,7 @@ const DepartmentAppointments = () => {
 
   useEffect(() => {
     const departmentId = localStorage.getItem('departmentId'); // or from context
-    axios.get(`http://localhost:8080/api/appointment/department/${departmentId}`)
+    axios.get(`http://localhost:8083/api/appointment/department/${departmentId}`)
       .then(res => setAppointments(res.data))
       .catch(err => console.error(err));
   }, []);

@@ -34,11 +34,9 @@ public class UserService {
         if (userRepository.emailExists(user.getEmailId())) {
             throw new RuntimeException("Email already exists");
         }
-
         // Hash password
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         user.setPassword(hashedPassword);
-
         return userRepository.createUser(user);
     }
 }

@@ -6,11 +6,11 @@ import com.project.unischedapi.department.model.DepartmentRegisterRequest;
 import com.project.unischedapi.department.repository.DepartmentRepository;
 import com.project.unischedapi.student.model.Student;
 import com.project.unischedapi.user.model.User;
-import com.project.unischedapi.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,7 +22,7 @@ public class DepartmentService {
     private DepartmentRepository departmentRepository;
 
     @Autowired
-    private UserService userService;
+    private RestTemplate restTemplate;
 
     public void registerDepartment(DepartmentRegisterRequest request) {
         // Step 1: Create User
@@ -32,7 +32,8 @@ public class DepartmentService {
         user.setRoleId(2); // 2 = Department
         user.setLastUpdatedBy(request.getLastUpdatedBy());
 
-        Integer userId = userService.registerUser(user);
+        // Call User Microservice
+        Integer userId = restTemplate.postForObject("http://localhost:8081/api/user/register", user, Integer.class);
 
         boolean exists = departmentRepository.departmentExistsByEmail(request.getEmailId());
 

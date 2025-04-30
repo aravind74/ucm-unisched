@@ -16,7 +16,7 @@ public class AppointmentController {
     @Autowired
     private AppointmentService appointmentService;
 
-    @PostMapping
+    @PostMapping("/book")
     public ResponseEntity<String> create(@RequestBody Appointment request) {
         int appointmentId = appointmentService.create(request);
         return ResponseEntity.ok("Appointment created with ID: " + appointmentId);
@@ -32,14 +32,14 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getByDepartmentId(departmentId));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody Appointment updated) {
         updated.setAppointmentId(id);
         appointmentService.updateAppointment(updated);
         return ResponseEntity.ok("Appointment updated successfully");
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("cancel/{id}")
     public ResponseEntity<String> cancel(@PathVariable Integer id, @RequestParam String updatedBy) {
         appointmentService.cancelAppointment(id, updatedBy);
         return ResponseEntity.ok("Appointment cancelled successfully");
