@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class User {
     private Integer userId;
     private String emailId;
-    @JsonIgnore  // Ignore password when serializing to JSON (don't expose in the response)
+//    @JsonIgnore  // Ignore password when serializing to JSON (don't expose in the response)
     private String password;
     private Integer roleId;
     private String roleName;

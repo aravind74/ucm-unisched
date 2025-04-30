@@ -29,7 +29,7 @@ const StudentRegister = () => {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/student/register', formData);
+      await axios.post('http://localhost:8082/api/student/register', formData);
       setSuccess("Student registered successfully!");
       setTimeout(() => setSuccess(''), 3000);
       setFormData({ emailId: '', password: '', confirmPassword: '', firstName: '', lastName: '', lastUpdatedBy: 'system' });

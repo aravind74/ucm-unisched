@@ -14,11 +14,11 @@ const BookAppointment = () => {
   const studentId = JSON.parse(localStorage.getItem("userDetails"))?.studentId;
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/department/getDepartmentList')
+    axios.get('http://localhost:8083/api/department/getDepartmentList')
       .then(res => setDepartments(res.data))
       .catch(err => console.error(err));
 
-    axios.get('http://localhost:8080/api/appointment/timeslots')
+    axios.get('http://localhost:8084/api/appointment/timeslots')
       .then(res => setTimeSlots(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -32,7 +32,7 @@ const BookAppointment = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8080/api/appointment/book', {
+    axios.post('http://localhost:8084/api/appointment/book', {
       ...formData,
       studentId: studentId
     })

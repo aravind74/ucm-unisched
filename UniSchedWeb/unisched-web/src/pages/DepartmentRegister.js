@@ -28,7 +28,7 @@ const DepartmentRegister = () => {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/department/register', formData);
+      await axios.post('http://localhost:8083/api/department/register', formData);
       setSuccess("Department registered successfully!");
       setTimeout(() => setSuccess(''), 3000);
       setFormData({ emailId: '', password: '', confirmPassword: '', departmentName: '', lastUpdatedBy: 'system' });
