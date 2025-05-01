@@ -38,6 +38,10 @@ public class AppointmentService {
         appointmentRepository.update(appointment);
     }
 
+    public void clearAppointmentHistory(Integer departmentId) {
+        appointmentRepository.deleteAppointmentHistoryByDepartmentId(departmentId);
+    }
+
     public void cancelAppointment(Integer appointmentId, String updatedBy) {
         appointmentRepository.cancel(appointmentId, updatedBy);
     }

@@ -12,6 +12,9 @@ const BookAppointment = () => {
   });
   const [success, setSuccess] = useState('');
   const studentId = JSON.parse(localStorage.getItem("userDetails"))?.studentId;
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('success');
 
   useEffect(() => {
     axios.get('http://localhost:8083/api/department/getDepartmentList')
@@ -36,56 +39,101 @@ const BookAppointment = () => {
       ...formData,
       studentId: studentId
     })
-    .then(res => {
-      setSuccess('Appointment booked successfully!');
-      setFormData({ departmentId: '', appointmentDate: '', timeSlotId: '', note: '' });
-      setTimeout(() => setSuccess(''), 3000);
-    })
-    .catch(err => console.error(err));
+      .then(() => {
+        setToastMessage("Appointment booked successfully!");
+        setToastType("success");
+        setShowToast(true);
+        setFormData({ departmentId: '', appointmentDate: '', timeSlotId: '', note: '' });
+      })
+      .catch(err => console.error(err));
   };
 
   return (
-    <div className="p-4">
-      <h3 className="mb-4 text-dark">Book Appointment</h3>
-
-      {success && <div className="alert alert-success">{success}</div>}
-
-      <form onSubmit={handleSubmit} className="row g-3" style={{ maxWidth: '1000px' }}>
-        <div className="col-md-4">
-          <label className="form-label">Department</label>
-          <select name="departmentId" className="form-select" value={formData.departmentId} onChange={handleChange} required>
-            <option value="">Select Department</option>
-            {departments.map(dept => (
-              <option key={dept.departmentId} value={dept.departmentId}>{dept.departmentName}</option>
-            ))}
-          </select>
+    <>
+      {/* Toast */}
+      <div className="toast-container position-fixed bottom-0 end-0 p-3" style={{ zIndex: 1055 }}>
+        <div className={`toast align-items-center text-bg-${toastType} border-0 ${showToast ? 'show' : ''}`} role="alert" aria-live="assertive" aria-atomic="true">
+          <div className="d-flex">
+            <div className="toast-body">{toastMessage}</div>
+            <button type="button" className="btn-close btn-close-white me-2 m-auto" onClick={() => setShowToast(false)}></button>
+          </div>
         </div>
+      </div>
+      <div className="container py-4">
+        <div className="bg-white p-4 rounded shadow-sm">
+          <h3 className="mb-4 text-dark">Book Appointment</h3>
 
-        <div className="col-md-3">
-          <label className="form-label">Appointment Date</label>
-          <input type="date" name="appointmentDate" className="form-control" value={formData.appointmentDate} onChange={handleChange} required />
-        </div>
+          {success && <div className="alert alert-success">{success}</div>}
 
-        <div className="col-md-2">
-          <label className="form-label">Time Slot</label>
-          <select name="timeSlotId" className="form-select" value={formData.timeSlotId} onChange={handleChange} required>
-            <option value="">Select</option>
-            {timeSlots.map(slot => (
-              <option key={slot.timeSlotId} value={slot.timeSlotId}>{slot.timeSlot}</option>
-            ))}
-          </select>
-        </div>
+          <form onSubmit={handleSubmit}>
+            <div className="row g-3">
+              <div className="col-md-6 col-lg-4">
+                <label className="form-label">Department</label>
+                <select
+                  name="departmentId"
+                  className="form-select"
+                  value={formData.departmentId}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Department</option>
+                  {departments.map(dept => (
+                    <option key={dept.departmentId} value={dept.departmentId}>
+                      {dept.departmentName}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-        <div className="col-12">
-          <label className="form-label">Note</label>
-          <textarea name="note" className="form-control" value={formData.note} onChange={handleChange} rows="3" />
-        </div>
+              <div className="col-md-6 col-lg-4">
+                <label className="form-label">Appointment Date</label>
+                <input
+                  type="date"
+                  name="appointmentDate"
+                  className="form-control"
+                  value={formData.appointmentDate}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-        <div className="col-12">
-          <button type="submit" className="btn btn-primary">Book Appointment</button>
+              <div className="col-md-6 col-lg-4">
+                <label className="form-label">Time Slot</label>
+                <select
+                  name="timeSlotId"
+                  className="form-select"
+                  value={formData.timeSlotId}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select</option>
+                  {timeSlots.map(slot => (
+                    <option key={slot.timeSlotId} value={slot.timeSlotId}>
+                      {slot.timeSlot}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="col-12">
+                <label className="form-label">Note</label>
+                <textarea
+                  name="note"
+                  className="form-control"
+                  value={formData.note}
+                  onChange={handleChange}
+                  rows="3"
+                />
+              </div>
+
+              <div className="col-12 text-end">
+                <button type="submit" className="btn btn-primary">Book Appointment</button>
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+      </div>
+    </>
   );
 };
 

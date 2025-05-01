@@ -41,6 +41,15 @@ body {
     text-align: center;
     margin-bottom: 20px;
   }
+
+  .bg-primary-subtle {
+    background-color: #d0e7ff !important;
+  }
+
+  .table-dark {
+    --bs-table-bg: rgb(51, 60, 77);
+  }
+  
   
   
   

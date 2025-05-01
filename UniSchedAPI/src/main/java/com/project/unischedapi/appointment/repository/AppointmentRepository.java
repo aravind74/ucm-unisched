@@ -52,18 +52,30 @@ public class AppointmentRepository {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Appointment.class), departmentId);
     }
 
-    public void update(Appointment appointment) {
+    public boolean update(Appointment appointment) {
         String sql = """
-            UPDATE Appointment
-            SET AppointmentDate = ?, TimeSlotID = ?, Note = ?, LastUpdated = CURRENT_TIMESTAMP, LastUpdatedBy = ?
-            WHERE AppointmentID = ?
-        """;
-        jdbcTemplate.update(sql,
+        UPDATE Appointment
+        SET AppointmentDate = ?, TimeSlotID = ?, Note = ?, AppointmentStatus = ?, LastUpdated = CURRENT_TIMESTAMP, LastUpdatedBy = ?
+        WHERE AppointmentID = ?
+    """;
+        int rowsAffected = jdbcTemplate.update(sql,
                 appointment.getAppointmentDate(),
                 appointment.getTimeSlotId(),
                 appointment.getNote(),
+                appointment.getAppointmentStatus(),
                 appointment.getLastUpdatedBy(),
                 appointment.getAppointmentId());
+
+        return rowsAffected > 0;
+    }
+
+    public void deleteAppointmentHistoryByDepartmentId(Integer departmentId) {
+        String sql = """
+            DELETE FROM Appointment
+            WHERE DepartmentID = ?
+              AND AppointmentStatus IN ('D', 'C')
+        """;
+        jdbcTemplate.update(sql, departmentId);
     }
 
     public void cancel(Integer appointmentId, String updatedBy) {

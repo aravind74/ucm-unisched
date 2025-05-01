@@ -23,7 +23,7 @@ const StudentAppointments = () => {
     message: ''
   });
 
-  const confirmCallbackRef = useRef(() => {}); // for generic confirmation
+  const confirmCallbackRef = useRef(() => { }); // for generic confirmation
 
   const fetchAppointments = () => {
     axios
@@ -48,7 +48,7 @@ const StudentAppointments = () => {
 
   const getStatusText = (code) => {
     switch (code) {
-      case 'P': return 'Pending';
+      case 'P': return 'Booked';
       case 'D': return 'Done';
       case 'C': return 'Cancelled';
       default: return 'Unknown';
@@ -62,8 +62,7 @@ const StudentAppointments = () => {
     }
     setSelectedAppointment(appointment);
     setEditData({
-      appointmentDate: dateString,
-      timeSlotId: appointment.timeSlotId
+      ...appointment
     });
     setShowModal(true);
   };
@@ -72,7 +71,7 @@ const StudentAppointments = () => {
     confirmCallbackRef.current = async () => {
       try {
         const updatedBy = "system";
-        await axios.put(`http://localhost:8084/api/appointment/cancel/${appointmentId}?updatedBy=${updatedBy}`);        
+        await axios.put(`http://localhost:8084/api/appointment/cancel/${appointmentId}?updatedBy=${updatedBy}`);
         setToastMessage("Appointment cancelled successfully!");
         setToastType("sucesss");
         setShowToast(true);
@@ -102,9 +101,11 @@ const StudentAppointments = () => {
     e.preventDefault();
     try {
       await axios.put(`http://localhost:8084/api/appointment/update/${selectedAppointment.appointmentId}`, {
+        ...selectedAppointment,
         appointmentDate: editData.appointmentDate,
         timeSlotId: editData.timeSlotId
       });
+      
       setToastMessage("Appointment updated successfully!");
       setToastType("success");
       setShowToast(true);
@@ -123,28 +124,28 @@ const StudentAppointments = () => {
 
   const sortedAppointments = [...appointments].sort((a, b) => {
     const statusOrder = { 'P': 1, 'D': 2, 'C': 3 };
-  
+
     const statusCompare = statusOrder[a.appointmentStatus] - statusOrder[b.appointmentStatus];
     if (statusCompare !== 0) return statusCompare;
-  
+
     const toDateTime = (appt) => {
       const date = new Date(appt.appointmentDate);
       const startTime = appt.timeSlot.split(' - ')[0]; // e.g., "8:00 AM"
-  
+
       // Convert "8:00 AM" to 24-hr time and set it on the date
       const [time, modifier] = startTime.split(' ');
       let [hours, minutes] = time.split(':').map(Number);
-  
+
       if (modifier === 'PM' && hours !== 12) hours += 12;
       if (modifier === 'AM' && hours === 12) hours = 0;
-  
+
       date.setHours(hours, minutes, 0, 0);
       return date;
     };
-  
+
     return toDateTime(a) - toDateTime(b); // Ascending: earliest first
   });
-   
+
 
   return (
     <>
@@ -166,6 +167,8 @@ const StudentAppointments = () => {
         onConfirm={() => confirmCallbackRef.current()}
         onCancel={() => setConfirmModal(prev => ({ ...prev, show: false }))}
       />
+
+      <h3 className="mb-4">My Appointments</h3>
 
       {/* Edit Modal */}
       {showModal && selectedAppointment && (
@@ -239,22 +242,34 @@ const StudentAppointments = () => {
               <td>{appt.appointmentDate}</td>
               <td>{appt.timeSlot}</td>
               <td>
-                <span className={`badge px-3 py-2 rounded-pill fw-semibold ${
-                  appt.appointmentStatus === 'P' ? 'bg-primary-subtle text-primary' :
-                  appt.appointmentStatus === 'D' ? 'bg-success text-white' :
-                  appt.appointmentStatus === 'C' ? 'bg-dark text-light' : 'bg-light text-dark'
-                }`}>
+                <span className={`badge px-3 py-2 rounded-pill fw-semibold ${appt.appointmentStatus === 'P' ? 'bg-primary-subtle text-primary' :
+                    appt.appointmentStatus === 'D' ? 'bg-success text-white' :
+                      appt.appointmentStatus === 'C' ? 'bg-dark text-light' : 'bg-light text-dark'
+                  }`}>
                   {getStatusText(appt.appointmentStatus)}
                 </span>
               </td>
               <td>
-                <button className="btn btn-sm btn-outline-secondary me-2" title="Edit Appointment" onClick={() => handleEdit(appt)}>
-                  <FaEdit />
-                </button>
-                <button className="btn btn-sm btn-outline-danger" title="Cancel Appointment" onClick={() => handleCancel(appt.appointmentId)}>
-                  <FaTrashAlt />
-                </button>
+                {appt.appointmentStatus === 'P' && (
+                  <>
+                    <button
+                      className="btn btn-sm btn-outline-secondary me-2"
+                      title="Edit Appointment"
+                      onClick={() => handleEdit(appt)}
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn btn-sm btn-outline-danger"
+                      title="Cancel Appointment"
+                      onClick={() => handleCancel(appt.appointmentId)}
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </>
+                )}
               </td>
+
             </tr>
           ))}
         </tbody>

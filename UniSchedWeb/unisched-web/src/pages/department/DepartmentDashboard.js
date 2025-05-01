@@ -4,10 +4,9 @@ import DepartmentAppointments from './DepartmentAppointments';
 
 const DepartmentDashboard = () => {
   return (
-    <DashboardLayout>
-      <h3 className="mb-4">Appointments</h3>
+    <>
       <DepartmentAppointments />
-    </DashboardLayout>
+    </>
   );
 };
 
