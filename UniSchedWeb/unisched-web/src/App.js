@@ -8,6 +8,7 @@ import DashboardLayout from './components/DashboardLayout';
 import StudentDashboard from './pages/student/StudentDashboard';
 import BookAppointment from './pages/student/BookAppointment';
 import DepartmentDashboard from './pages/department/DepartmentDashboard';
+import DepartmentHistory from './pages/department/DepartmentHistory';
 
 function App() {
   return (
@@ -42,6 +43,15 @@ function App() {
           element={
             <DashboardLayout>
               <DepartmentDashboard />
+            </DashboardLayout>
+          }
+        />
+
+        <Route
+          path="/department/history"
+          element={
+            <DashboardLayout>
+              <DepartmentHistory />
             </DashboardLayout>
           }
         />

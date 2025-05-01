@@ -3,11 +3,25 @@ import { Link } from 'react-router-dom';
 import { FaCalendarAlt, FaPlusCircle, FaHistory, FaBars } from 'react-icons/fa';
 
 const Sidebar = ({ isOpen, setSidebarOpen }) => {
-  const menuItems = [
-    { path: "/student/dashboard", icon: <FaCalendarAlt />, label: "Appointments" },
-    { path: "/student/book", icon: <FaPlusCircle />, label: "Book Appointment" },
-    { path: "/student/history", icon: <FaHistory />, label: "History" }
-  ];
+  const role = localStorage.getItem('role'); // "STUDENT" or "DEPARTMENT"
+
+const menuItems = [
+  {
+    path: role === "STUDENT" ? "/student/dashboard" : "/department/dashboard",
+    icon: <FaCalendarAlt />,
+    label: "Appointments"
+  },
+  ...(role === "STUDENT"
+    ? [{ path: "/student/book", icon: <FaPlusCircle />, label: "Book Appointment" }]
+    : []),
+  ...(role === "DEPARTMENT"
+    ? [{
+        path: "/department/history",
+        icon: <FaHistory />,
+        label: "History"
+      }]
+    : [])
+];
 
   return (
     <div

@@ -17,18 +17,29 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:8081/api/user/login', formData);
       const { userId, roleName, emailId, token } = response.data;
-
+  
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId);
       localStorage.setItem('emailId', emailId);
       localStorage.setItem('role', roleName);
-
+  
+      // ✅ Fetch full userDetails and store
+      const userDetailsUrl = roleName === 'STUDENT'
+        ? `http://localhost:8082/api/student/${userId}`
+        : `http://localhost:8083/api/department/${userId}`;
+  
+      const userDetailsRes = await axios.get(userDetailsUrl);
+      localStorage.setItem("userDetails", JSON.stringify(userDetailsRes.data));
+  
+      // ✅ Now navigate after data is available
       navigate(roleName === 'STUDENT' ? '/student/dashboard' : '/department/dashboard');
+  
     } catch (err) {
       setError('Invalid email or password');
       setTimeout(() => setError(''), 3000);
     }
   };
+  
 
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh', backgroundColor: '#f7f7f7' }}>
